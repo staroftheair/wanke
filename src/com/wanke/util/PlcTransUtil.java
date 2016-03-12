@@ -9,6 +9,15 @@ public class PlcTransUtil {
 
 	private static String PLC_HEAD = "FINS";
 
+	/**
+	 * 执行Socket通信，获取相应字符串
+	 * 
+	 * @param socket
+	 * @param plccommand
+	 *            PLC命令字符串
+	 * @return 通信返回字符串
+	 * @throws IOException
+	 */
 	public String PlcTrans(Socket socket, String plccommand) throws IOException {
 
 		DataInputStream input = new DataInputStream(socket.getInputStream());
@@ -17,11 +26,10 @@ public class PlcTransUtil {
 		byte[] resultByte = new byte[1024];
 		out.write(commandByte);
 		out.flush();
-		int res = input.read(commandByte);
+		int res = input.read(resultByte);
 		String result = "";
 		if (res != -1) {
 			result = UtilStr.byte2HexStr(resultByte);
-			System.out.print(result + "\r\n");
 		}
 		return result;
 	}
@@ -118,7 +126,7 @@ public class PlcTransUtil {
 		} else {
 			transStr += "00FF0102";
 		}
-		transStr += UtilStr.str2HexStr(scope) + "00" + UtilStr.byte2HexStr(IntByteUtil.intToBytes(channel))
+		transStr += scope + "00" + UtilStr.byte2HexStr(IntByteUtil.intToBytes(channel))
 				+ UtilStr.byte2HexStr(IntByteUtil.intToBytes(bit));
 		transStr += UtilStr.byte2HexStr(IntByteUtil.intToBytes2(channelcount));
 
